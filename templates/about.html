@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}지수 설명 — 공포수치는 이렇게 계산해요 · {{ site.name }}{% endblock %}
+{% block desc %}동네 아줌마 공포수치의 계산 방법, 지표 {{ n_ind }}개와 비중, 자료 출처, 한계를 모두 공개해요.{% endblock %}
+{% block main %}
+<h1 class="page-title">지수 설명</h1>
+<section class="card">
+  <div class="report-head">
+    <div>
+      <h2>무엇을 재나요</h2>
+      <p>"동네 아줌마까지 주식 얘기를 하면 꼭지"라는 오래된 속설이 있어요. {{ site.name }}는 그 속설을 숫자로 바꿔 본 지표예요. 코스피 시장에 겁이 얼마나 퍼져 있는지를 0부터 100까지로 나타내요.</p>
+      <p><b>0에 가까울수록 욕심(탐욕), 100에 가까울수록 겁(공포)</b>이에요. 미국 CNN 공포·탐욕 지수와는 방향이 반대예요.</p>
+    </div>
+    {{ character }}
+  </div>
+</section>
+<section class="card">
+  <h2>계산 방법</h2>
+  <ol class="steps">
+    <li>매 거래일 시장 지표 {{ n_ind }}개의 값을 구해요.</li>
+    <li>지표마다 "직전 4년(976거래일) 가운데 오늘 값이 몇 번째로 겁나는 쪽인가"를 0~100 백분위로 바꿔요.</li>
+    <li>아래 비중으로 가중 평균을 내면 그날의 공포수치예요.</li>
+  </ol>
+  <p>자료가 늦게 나오는 지표(금융투자협회 통계는 하루 이틀 늦어요)는 가장 최근 값을 써요. 어떤 지표를 구하지 못한 날은 그 지표를 빼고 나머지 비중을 다시 맞춰요.</p>
+  <div class="table-wrap"><table class="bands">
+    <tr><th>지표</th><th>분류</th><th>비중</th><th>방향</th><th>뜻</th></tr>
+    {% for t in table %}<tr><td><b>{{ t.name }}</b></td><td>{{ t.group }}</td><td>{{ t.weight }}%</td><td>{{ t.dir }}</td><td>{{ t.desc }}</td></tr>{% endfor %}
+  </table></div>
+</section>
+<section class="card">
+  <h2>자료와 한계</h2>
+  <ul class="plain">
+    <li>자료 출처: 네이버 금융(코스피·종목·ETF 시세, 투자자별 매매), 금융투자협회 통계(예탁금·신용융자·미수금·반대매매), 시카고옵션거래소(VIX).</li>
+    <li>기록은 {{ first }}부터 {{ days | num(0) }}거래일이에요. 통계로 보기에는 짧은 기간이에요.</li>
+    <li>오른/내린 종목과 52주 신고가·신저가는 현재 상장된 코스피 보통주를 기준으로 직접 셌어요. 상장 폐지된 종목은 과거 집계에 빠져 있어요.</li>
+    <li>옵션 시장 변동성지수(VKOSPI)는 자동으로 받을 수 있는 공개 경로가 없어, 코스피의 실제 출렁임으로 대신했어요.</li>
+    <li>이 수치는 시장 분위기를 요약한 것이지 주가를 예측하지 않아요.</li>
+  </ul>
+</section>
+<section class="card">
+  <h2>자주 묻는 질문</h2>
+  {% for q, a in faq %}<details><summary>{{ q }}</summary><p>{{ a }}</p></details>{% endfor %}
+</section>
+<section class="card" id="contact">
+  <h2>만든 사람·문의</h2>
+  <p>{{ site.name }}는 개인이 운영하는 사이트예요. 수집, 계산, 글 작성이 모두 자동으로 이루어져요.</p>
+  {% if site.contact_email %}<p>문의: <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>{% endif %}
+  <p>'복순 여사'는 가상의 캐릭터이며 실제 인물이나 특정 집단과 관계가 없어요.</p>
+</section>
+{% endblock %}

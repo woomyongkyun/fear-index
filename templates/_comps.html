@@ -1,0 +1,10 @@
+<ul class="comps">
+{% for c in v.comps %}
+  <li>
+    <div class="c-head"><span class="c-level" style="background:{{ c.color }}">{{ c.level }}</span>
+      <strong>{{ c.name }}</strong><span class="c-group">{{ c.group }}</span><span class="c-score">{{ c.score }}</span></div>
+    <div class="c-bar"><span style="width:{{ c.score }}%;background:{{ c.color }}"></span></div>
+    <p class="c-desc">현재 {{ c.value }} · 비중 {{ c.weight }}% · {{ c.desc }}</p>
+  </li>
+{% endfor %}
+</ul>

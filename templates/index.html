@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}코스피 공포수치 {{ v.round }} ({{ v.band.name }}) · {{ site.name }}{% endblock %}
+{% block desc %}{{ v.label }} 코스피 공포수치는 {{ v.round }}점, {{ v.band.name }} 구간이에요. 시장 지표 {{ n_ind }}개로 계산해 평일 하루 세 번 자동 갱신해요.{% endblock %}
+{% block head %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{% for q, a in faq %}{"@type":"Question","name":{{ q | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ a | tojson }}}}{% if not loop.last %},{% endif %}{% endfor %}]}</script>
+{% endblock %}
+{% block main %}
+<section class="hero">
+  <div class="hero-text">
+    <p class="eyebrow">코스피 공포·탐욕 지표</p>
+    <h1>{{ site.name }}</h1>
+    <p class="lead">{{ site.tagline }}. 시장 지표 {{ n_ind }}개를 지난 4년과 견줘 0(욕심)부터 100(겁)까지로 보여드려요.</p>
+  </div>
+  <div class="card today">
+    <div class="today-fig">{{ character }}</div>
+    <div class="today-gauge">
+      {{ gauge }}
+      <p class="today-band" style="color:{{ v.band.color }}">{{ v.band.name }} · {{ v.mood[0] }}</p>
+      <p class="today-delta">{% if v.delta is none or v.delta | abs < 0.5 %}전 거래일과 거의 같아요{% elif v.delta > 0 %}전 거래일보다 {{ v.delta | abs | num(0) }}점 올랐어요 (겁이 커짐){% else %}전 거래일보다 {{ v.delta | abs | num(0) }}점 내렸어요 (겁이 줄어듦){% endif %}</p>
+      <p class="stamp">{{ v.label }} 기준 · 마지막 갱신 {{ meta.updated }} (한국 시간){% if not meta.final %} · 장중 잠정{% endif %}</p>
+      {% if meta.failed %}<p class="stamp late">일부 자료가 늦어져 직전 값으로 계산했어요.</p>{% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>오늘 한 줄 정리</h2>
+  {% for p in v.text %}<p>{{ p }}</p>{% endfor %}
+</section>
+
+<section class="card">
+  <div class="h-row"><h2>최근 6개월 흐름</h2><a href="{{ root }}archive/index.html">전체 기록 →</a></div>
+  <p class="sub">평균 {{ stats.avg }} · 가장 겁난 날 {{ stats.max }} ({{ stats.max_d.month }}.{{ stats.max_d.day }}) · 가장 들뜬 날 {{ stats.min }} ({{ stats.min_d.month }}.{{ stats.min_d.day }}) · 위로 갈수록 공포</p>
+  {{ timeline }}
+  <ol class="recent">
+    {% for d in recent %}<li><a href="{{ root }}archive/{{ d.iso }}.html"><span>{{ d.md }}</span><b style="color:{{ d.band.color }}">{{ d.value }}</b></a></li>{% endfor %}
+  </ol>
+</section>
+
+{% if flow %}
+<section class="card">
+  <h2>오늘 누가 사고 팔았나</h2>
+  <p class="sub">코스피 투자자별 순매수(억원){% if not meta.final %} · 장중 잠정{% endif %}</p>
+  <ul class="flows">
+    {% for f in flow %}<li><span class="f-name">{{ f.name }}</span><span class="f-track"><span class="{{ 'buy' if f.v >= 0 else 'sell' }}" style="width:{{ f.w }}%"></span></span><b class="{{ 'buy' if f.v >= 0 else 'sell' }}">{{ f.v | signed(0) }}억</b></li>{% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>같은 구간이었던 과거에는</h2>
+  <p>지난 {{ bstats.years }}년 동안 공포수치가 오늘처럼 '{{ bstats.band.name }}'({{ bstats.band.lo }}~{{ bstats.band.hi }}) 구간이었던 날은 {{ bstats.n60 }}일이에요.</p>
+  <div class="stat-row">
+    <div><b>{{ bstats.avg20 | signed }}%</b><span>1개월 뒤 코스피 평균<br>(아무 날이나 샀다면 {{ bstats.base20 | signed }}%)</span></div>
+    <div><b>{{ bstats.avg60 | signed }}%</b><span>3개월 뒤 코스피 평균<br>(아무 날이나 샀다면 {{ bstats.base60 | signed }}%)</span></div>
+    <div><b>{{ bstats.win60 }}%</b><span>3개월 뒤<br>올라 있었던 비율</span></div>
+  </div>
+  <p class="note">과거 집계일 뿐 앞날을 알려주지 않아요. 기간이 짧고, 겹치는 날이 많아 실제 표본은 더 적어요. 1개월은 20거래일, 3개월은 60거래일로 셌어요.</p>
+</section>
+
+{% if similar %}
+<section class="card">
+  <h2>오늘과 가장 닮았던 날</h2>
+  <p class="sub">지표 {{ n_ind }}개의 점수 모양이 오늘과 가장 비슷했던 과거 날과, 그 뒤 3개월 코스피</p>
+  <ul class="similar">
+    {% for s in similar %}<li><a href="{{ root }}archive/{{ s.iso }}.html"><span class="s-date">{{ s.iso }}</span><span>그날 수치 <b style="color:{{ s.band.color }}">{{ s.value }}</b></span><span>닮은 정도 {{ s.similarity }}%</span><span class="{{ 'buy' if s.fwd >= 0 else 'sell' }}">3개월 뒤 {{ s.fwd | signed }}%</span></a></li>{% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<section class="card" id="comps">
+  <h2>근거 숫자 — 지표 {{ n_ind }}개</h2>
+  <p class="sub">막대가 길수록 지난 4년 중 겁이 큰 편이에요. 겁을 키운 쪽: {{ v.up | join(', ') }} · 잔잔한 쪽: {{ v.down | join(', ') }}</p>
+  {% include "_comps.html" %}
+</section>
+
+<section class="card" id="bands">
+  <h2>구간 읽는 법</h2>
+  <table class="bands">
+    <tr><th>점수</th><th>구간</th><th>동네 분위기</th></tr>
+    <tr><td>0~25</td><td><b style="color:#2f9e6e">극탐욕</b></td><td>온 동네가 주식 얘기. 다들 들떠 있어요.</td></tr>
+    <tr><td>25~45</td><td><b style="color:#6f9c3f">탐욕</b></td><td>주식 얘기가 슬슬 들려요. 욕심이 붙는 구간.</td></tr>
+    <tr><td>45~55</td><td><b style="color:#b8922a">평온</b></td><td>한쪽으로 쏠리지 않은 평범한 날.</td></tr>
+    <tr><td>55~75</td><td><b style="color:#d67a30">공포</b></td><td>한숨이 늘어요. 겁이 퍼지는 구간.</td></tr>
+    <tr><td>75~100</td><td><b style="color:#dc5245">극공포</b></td><td>주식 얘기만 나오면 손사래. 투매가 나오는 극단.</td></tr>
+  </table>
+</section>
+
+<section class="card" id="faq">
+  <h2>자주 묻는 질문</h2>
+  {% for q, a in faq %}<details{% if loop.first %} open{% endif %}><summary>{{ q }}</summary><p>{{ a }}</p></details>{% endfor %}
+</section>
+{% endblock %}

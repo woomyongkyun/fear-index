@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ v.iso }} 코스피 공포수치 {{ v.round }} ({{ v.band.name }}) · {{ site.name }}{% endblock %}
+{% block desc %}{{ v.text[0] }} {{ v.text[1] }}{% endblock %}
+{% block main %}
+<p class="crumb"><a href="{{ root }}index.html">오늘</a> › <a href="index.html">지난 기록</a> › {{ v.iso }}</p>
+<section class="card today small">
+  <div class="today-fig">{{ character }}</div>
+  <div class="today-gauge">
+    <h1>{{ v.label }} 공포수치</h1>
+    {{ gauge }}
+    <p class="today-band" style="color:{{ v.band.color }}">{{ v.band.name }} · {{ v.mood[0] }}</p>
+  </div>
+</section>
+<section class="card">
+  <h2>그날 정리</h2>
+  {% for p in v.text %}<p>{{ p }}</p>{% endfor %}
+</section>
+<section class="card">
+  <h2>근거 숫자 — 지표 {{ v.n }}개</h2>
+  {% include "_comps.html" %}
+</section>
+<nav class="pager">
+  {% if prev_day %}<a href="{{ prev_day }}.html">← {{ prev_day }}</a>{% else %}<span></span>{% endif %}
+  {% if next_day %}<a href="{{ next_day }}.html">{{ next_day }} →</a>{% else %}<a href="{{ root }}index.html">오늘 수치 →</a>{% endif %}
+</nav>
+{% endblock %}

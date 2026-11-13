@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}지난 기록 — 날짜별 코스피 공포수치 · {{ site.name }}{% endblock %}
+{% block desc %}코스피 공포수치를 날짜별로 모았어요. 날짜를 누르면 그날의 지표와 정리 글을 볼 수 있어요.{% endblock %}
+{% block main %}
+<h1 class="page-title">지난 기록</h1>
+<p class="lead">날짜를 누르면 그날의 지표와 정리 글을 볼 수 있어요. 색은 구간을 뜻해요.</p>
+{% for m in months %}
+<section class="card month">
+  <div class="h-row"><h2>{{ m.label }}</h2><span class="sub">평균 {{ m.avg }}</span></div>
+  <ol class="days">
+    {% for d in m.days %}<li><a href="{{ d.iso }}.html" style="--c:{{ d.band.color }}"><span>{{ d.md }}</span><b>{{ d.value }}</b></a></li>{% endfor %}
+  </ol>
+</section>
+{% endfor %}
+{% endblock %}

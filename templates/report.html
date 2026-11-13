@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ r.title }} · {{ site.name }}{% endblock %}
+{% block desc %}{{ r.text[0] }}{% endblock %}
+{% block head %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ r.title | tojson }},"datePublished":"{{ r.end.strftime('%Y-%m-%d') }}","author":{"@type":"Organization","name":{{ site.name | tojson }}}}</script>
+{% endblock %}
+{% block main %}
+<p class="crumb"><a href="{{ root }}index.html">오늘</a> › <a href="index.html">리포트</a></p>
+<article class="card">
+  <div class="report-head">
+    <div>
+      <h1>{{ r.title }}</h1>
+      <p class="sub">{{ r.start.strftime('%Y.%m.%d') }} ~ {{ r.end.strftime('%Y.%m.%d') }} · 평균 {{ r.avg | num(0) }} · 코스피 {{ r.kospi_ret | signed }}%</p>
+    </div>
+    {{ character }}
+  </div>
+  {{ timeline }}
+  {% for p in r.text %}<p>{{ p }}</p>{% endfor %}
+  <h2>날짜별 수치</h2>
+  <ol class="days">
+    {% for d in r.days %}<li><a href="{{ root }}archive/{{ d.iso }}.html" style="--c:{{ d.band.color }}"><span>{{ d.md }}</span><b>{{ d.value }}</b></a></li>{% endfor %}
+  </ol>
+</article>
+{% endblock %}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+<title>{{ site.name }}</title><link>{{ base }}/</link><description>{{ site.description }}</description><language>ko</language>
+<item><title>{{ v.iso }} 공포수치 {{ v.round }} ({{ v.band.name }})</title><link>{{ base }}/archive/{{ v.iso }}.html</link><guid>{{ base }}/archive/{{ v.iso }}.html</guid><description>{{ v.text | join(' ') }}</description></item>
+{% for r in weekly + monthly %}<item><title>{{ r.title }}</title><link>{{ base }}/report/{{ r.slug }}.html</link><guid>{{ base }}/report/{{ r.slug }}.html</guid><description>{{ r.text[0] }}</description></item>
+{% endfor %}</channel></rss>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ site.name }}{% endblock %}</title>
+<meta name="description" content="{% block desc %}{{ site.description }}{% endblock %}">
+{% if base %}<link rel="canonical" href="{{ base }}/{{ '' if path == 'index.html' else path | replace('index.html', '') }}">
+<link rel="alternate" type="application/rss+xml" title="{{ site.name }}" href="{{ base }}/feed.xml">{% endif %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.desc() }}">
+<meta property="og:locale" content="ko_KR">
+{% if site.google_verify %}<meta name="google-site-verification" content="{{ site.google_verify }}">{% endif %}
+{% if site.naver_verify %}<meta name="naver-site-verification" content="{{ site.naver_verify }}">{% endif %}
+<link rel="icon" href="{{ root }}static/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ root }}static/style.css">
+{% if site.ga_id %}<script async src="https://www.googletagmanager.com/gtag/js?id={{ site.ga_id }}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','{{ site.ga_id }}',{anonymize_ip:true});</script>{% endif %}
+{% if site.adsense %}<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ site.adsense }}" crossorigin="anonymous"></script>{% endif %}
+{% block head %}{% endblock %}
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="{{ root }}index.html"><span class="brand-dot"></span>{{ site.name }}</a>
+  <nav>
+    <a href="{{ root }}index.html">오늘</a>
+    <a href="{{ root }}archive/index.html">지난 기록</a>
+    <a href="{{ root }}report/index.html">리포트</a>
+    <a href="{{ root }}about.html">지수 설명</a>
+  </nav>
+</header>
+<main>
+{% block main %}{% endblock %}
+{% if site.adsense %}<aside class="ad" aria-label="광고"><ins class="adsbygoogle" style="display:block" data-ad-client="{{ site.adsense }}" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></aside>{% endif %}
+</main>
+<footer>
+  <p class="warn">공개된 시장 자료를 자동으로 요약한 참고용 지표예요. 투자 권유가 아니며, 투자 결정과 결과는 본인 책임이에요.</p>
+  <p>자료: 네이버 금융 · 금융투자협회 · 시카고옵션거래소 &nbsp;|&nbsp; 평일 08시·12시·17시 자동 갱신</p>
+  <p><a href="{{ root }}about.html">지수 설명·문의</a> · <a href="{{ root }}privacy.html">개인정보처리방침</a> · <a href="{{ root }}static/index.csv">지수 자료 내려받기(CSV)</a></p>
+  <p class="copy">© {{ year }} {{ site.name }}</p>
+</footer>
+</body>
+</html>

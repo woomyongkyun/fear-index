@@ -1,0 +1,13 @@
+{
+  "name": "동네 아줌마 공포수치",
+  "short": "공포수치",
+  "tagline": "코스피에 겁이 얼마나 퍼졌는지, 숫자 하나로",
+  "description": "코스피 투자 심리를 0~100으로 보여주는 공포·탐욕 지표. 평일 하루 세 번 자동 갱신.",
+  "base_url": "https://woomyongkyun.github.io/fear-index",
+  "domain": "",
+  "contact_email": "",
+  "ga_id": "",
+  "adsense": "",
+  "google_verify": "",
+  "naver_verify": ""
+}
