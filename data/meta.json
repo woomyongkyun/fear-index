@@ -1,16 +1,18 @@
 {
- "updated": "2026-11-19 01:46",
- "slot": "아침",
- "final": true,
- "date": "2026-11-18",
+ "updated": "2026-11-19 12:55",
+ "slot": "낮",
+ "final": false,
+ "date": "2026-11-19",
  "status": {
   "kospi": true,
-  "breadth": true,
+  "breadth": false,
   "vix": true,
   "fx": true,
   "kofia": true,
   "etf": true,
   "flows": true
  },
- "failed": []
+ "failed": [
+  "breadth"
+ ]
 }
