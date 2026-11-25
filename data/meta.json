@@ -1,8 +1,8 @@
 {
- "updated": "2026-11-25 04:09",
- "slot": "아침",
- "final": true,
- "date": "2026-11-24",
+ "updated": "2026-11-25 14:10",
+ "slot": "낮",
+ "final": false,
+ "date": "2026-11-25",
  "status": {
   "kospi": true,
   "breadth": true,
