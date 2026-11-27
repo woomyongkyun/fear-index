@@ -1,11 +1,11 @@
 {
- "updated": "2026-11-27 13:39",
- "slot": "낮",
- "final": false,
+ "updated": "2026-11-27 20:47",
+ "slot": "저녁",
+ "final": true,
  "date": "2026-11-27",
  "status": {
   "kospi": true,
-  "breadth": false,
+  "breadth": true,
   "vix": true,
   "fx": true,
   "kofia": false,
@@ -13,7 +13,6 @@
   "flows": true
  },
  "failed": [
-  "breadth",
   "kofia"
  ]
 }
